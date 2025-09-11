@@ -1,0 +1,58 @@
+{%extends "base.html"%} {%block title%}About Us{%endblock%} {%block body%}
+<img src="static/sun.jpg.avif" alt="sunset image"></img>
+
+<form style="margin: 50px; width:50%" method="POST">
+  {% csrf_token %}
+  {{form.as_p}}
+
+ <!-- <div class="mb-3 m2-4">
+    <label for="exampleInputEmail1" class="form-label">id</label>
+    <input
+      type="number"
+      class="form-control"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      name="id"
+      required
+    />
+    
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleInputPassword1"
+      name="name"
+      required
+    />
+  </div>
+
+   <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">age</label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleInputPassword1"
+      name="age"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">marks</label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleInputPassword1"
+      name="marks"
+      required
+    />
+  </div>-->
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+{%endblock%}
