@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
