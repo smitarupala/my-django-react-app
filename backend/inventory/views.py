@@ -1,13 +1,15 @@
 #from django.shortcuts import render
 from django.http import JsonResponse 
 from inventory.models import Customer
+from inventory.models import OTP
 import json
-
+import random
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from inventory.serializer import CustomerSerializer , SignupSerializer ,LoginSerializer
-from rest_framework import status
+from inventory.serializer import CustomerSerializer , SignupSerializer ,LoginSerializer,SendOTPSerializer,VerifyOTPSerializer
 from rest_framework.views import APIView
+
 
 
 
@@ -60,14 +62,6 @@ def update_data(request,id):
    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-   
-
-  
-
-
-
 @api_view(["DELETE"])
 def delete_data(request,id):
     print("request , id:",id)
@@ -103,6 +97,29 @@ class LoginView(APIView):
          return Response(serializer.validated_data , status=status.HTTP_200_OK)
       print("error:",serializer.errors)
       return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+   
+class SendOTP(APIView):
+   def post(self,request):
+    serializer = SendOTPSerializer(data=request.data)
+   
+    if serializer.is_valid():
+      new_otp=serializer.save()
+      return Response({"message":"otp sent", "otp":new_otp.code} , status=200)
+    print("errors:", serializer.errors) 
+    return Response({"message": " otp expired !"} , status=400)
+      
+
+class VerifyOTP(APIView):
+   def post(self,request):
+      print("requ:",request)
+      serializer = VerifyOTPSerializer(data=request.data)
+
+      if serializer.is_valid():
+       return Response(serializer.validated_data ,status=status.HTTP_200_OK )
+      print(" data Error:",serializer.errors)
+      return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+     
+   
    
 
       

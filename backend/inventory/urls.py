@@ -2,12 +2,13 @@ from django.urls import path
 from . import views 
 #from .views import hello_world
 from inventory.views import hello_world , customer_list
-from inventory.views import LoginView , SignupView
-
+from inventory.views import LoginView , SignupView , SendOTP ,VerifyOTP
 
 urlpatterns = [
     path('signup/',SignupView.as_view() , name="signup"),
     path('login/' , LoginView.as_view(), name="login"),
+    path('SendOTP/',SendOTP.as_view() , name="SendOTP"),
+    path('VerifyOTP/' , VerifyOTP.as_view(), name="VerifyOTP"),
     path('customers/',views.customer_list , name="customer_list"),
     path('customers/add/',views.add_data , name="add_data"),
     path('customers/update/<int:id>',views.update_data , name="update_data"),

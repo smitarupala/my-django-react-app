@@ -2,15 +2,20 @@ from rest_framework import serializers
 from inventory.models import  Signup , Customer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.conf import settings
+from inventory.views import  OTP
+from inventory.utils import generate_otp 
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+User = get_user_model()
+
 
 
 class CustomerSerializer(serializers.ModelSerializer):
    class Meta:
       model=Customer
       fields=['id','First','Last','email','mob1','mob2']
-
-      
-
 
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,7 +72,58 @@ class LoginSerializer(serializers.Serializer):
            #'email': user.email,
           
     }
-    
+  
+class SendOTPSerializer(serializers.Serializer):
+   username = serializers.CharField()
+
+   
+
+   def create(self,validated_data):
+      username =validated_data.get("username") # data["username"]
+
+      print("username:",username)
+      user=User.objects.get(username=username)
+      print ("user ::",user)
+     
+      otp = generate_otp()
+      new_otp = OTP.objects.create(user=user , code=otp)
+
+      return new_otp
+
+class VerifyOTPSerializer(serializers.Serializer):
+   username = serializers.CharField()
+   otp=serializers.CharField()
+
+   def validate(self,validated_data):
+      username=validated_data.get("username")
+      otp=validated_data.get("otp")
+
+      try:
+         user=User.objects.get(username=username)
+      except User.DoesNotExit:
+         serializers.ValidationError("User not Found")
+
+      otp_obj=OTP.objects.filter(user=user , code=otp ,is_used=0).order_by("-is_created").first()
+      
+      if not otp_obj :
+         raise serializers.ValidationError("invalid OTP")
+
+      if timezone.now() - otp_obj.is_created > timezone.timedelta(minutes=5):
+            raise serializers.ValidationError("OTP expired")
+      
+      otp_obj.is_used = 1
+      otp_obj.save()
+
+      refersh=RefreshToken.for_user(user)
+
+
+      return{
+      "refresh" : str("refersh"),
+      "access"  : str(refersh.access_token),
+      "username" : user.username
+       
+      
+      }
 
 
 
