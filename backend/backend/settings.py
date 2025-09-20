@@ -104,10 +104,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'company',
-        'USER': 'root',
-        'PASSWORD': 'sm6402',
-        'HOST': 'localhost',   # या आपका DB server IP
+        'NAME': 'smita123$my_db',
+        'USER': 'smita123',
+        'PASSWORD': 'sm123@6402',
+        'HOST': 'smita123.mysql.pythonanywhere-services.com',   # या आपका DB server IP
         'PORT': '3306',        # MySQL का default port
     }
 }
